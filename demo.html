@@ -7,12 +7,7 @@
 		html,body{background-color:#282923;height:100%;width:100%;font-size:65.5%;margin:0;padding:0;}
 		.snow{
 			color:white;
-			display:inline-block;
 			animation:rotes 3s infinite linear;
-		}
-		.snowborder{
-			position:absolute;
-			/*color:blue;*/
 		}
 		@keyframes rotes{
 			100%{
@@ -27,7 +22,7 @@
 <script type="text/javascript">
 	snow = function(){
 		this.body = document.body;
-		this.millisec = 50;//下一朵雪花生成的速度
+		this.millisec = 30;//下一朵雪花生成的速度
 		this.timer;
 		this.winwidth = window.innerWidth;
 		this.winHeight = window.innerHeight;
@@ -36,9 +31,9 @@
 			snowborder = document.createElement('div');
 			snow = document.createElement('div');
 			snowborder.appendChild(snow);
+			snowborder.style.position='absolute';
 			//雪花的属性
 			snow.classList.add('snow');
-			snowborder.classList.add('snowborder');
 			snow.innerHTML = '❉';			
 			return snowborder;
 		}
@@ -85,7 +80,7 @@
 					},duration);//刚好是过渡效果结束的时间，把元素删除
 				},100);
 			},this.millisec);
-
+			return "play";
 		};
 		//停止下雪效果
 		this.stop=function(){
