@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<style>
+		html,body{background-color:#282923;height:100%;width:100%;font-size:65.5%;margin:0;padding:0;}
+		.snow{
+			color:white;
+			display:inline-block;
+			animation:rotes 3s infinite linear;
+		}
+		.snowborder{
+			position:absolute;
+			/*color:blue;*/
+		}
+		@keyframes rotes{
+			100%{
+				transform:rotate3d(1,-1,1,720deg);
+			}
+		}
+	</style>
+</head>
+<body>
+</body>
+</html>
+<script type="text/javascript">
+	snow = function(){
+		this.body = document.body;
+		this.millisec = 50;//下一朵雪花生成的速度
+		this.timer;
+		this.winwidth = window.innerWidth;
+		this.winHeight = window.innerHeight;
+		//创建并返回 一个雪花对象
+		this.create = function(){
+			snowborder = document.createElement('div');
+			snow = document.createElement('div');
+			snowborder.appendChild(snow);
+			//雪花的属性
+			snow.classList.add('snow');
+			snowborder.classList.add('snowborder');
+			snow.innerHTML = '❉';			
+			return snowborder;
+		}
+		//开始下雪效果   var 定义变量为局部，为了指定当前的雪花元素
+		this.play = function(){
+			this.body.style.cssText=`transform-style:preserve-3d;
+			transform:perspective(50rem);`;
+			var that = this; //将this保存在that内，因为 闭包函数内和外部不联系
+			this.timer = setInterval(function(){
+				var snowborder = that.create();
+				//克隆一个雪花
+				var cloneSnow = snowborder.cloneNode(1);
+				/*开始位置*/
+				var startx = (that.winwidth*.95)*Math.random();						
+				var starty = (that.winHeight*.95)*Math.random();				
+				/*结束位置*/
+				var endx = (that.winwidth*.95) * Math.random();
+				var endy = (that.winHeight*.95) * Math.random();
+				var endz = (that.winHeight*.5) * Math.random();
+				/* 持续时间  这个时间是元素从初始化状态到最终状态所需的过渡时间，也是删除元素的时间 ！！！ */
+				var duration = parseInt(4000 + Math.random()*4000);
+				var fontSize = 1 + Math.random()*30;
+				// 开始时透明度
+				var startOpacity = .5+.3*Math.random();
+				// 结束时透明度
+				var endOpacity = .1;
+				//设置初始的雪花位置和大小
+				cloneSnow.style.cssText += `
+					transform:translate3d(${startx}px,0,${endz}px);
+					opacity:${startOpacity};
+					transition:all ${duration}ms linear;
+					font-size:${fontSize}px;`;
+
+				/* adding  to body */
+				that.body.appendChild(cloneSnow);
+				//0.1秒后设置一下css，覆盖掉一些位置的，使得位置发送变化
+				setTimeout(function(){
+					cloneSnow.style.cssText += `
+					transform:translate3d(${endx}px,${endy}px,${endz}px);
+					opacity:${endOpacity};
+					`;
+					setTimeout(function(){
+						cloneSnow.remove();
+					},duration);//刚好是过渡效果结束的时间，把元素删除
+				},100);
+			},this.millisec);
+
+		};
+		//停止下雪效果
+		this.stop=function(){
+			clearInterval(this.timer);
+			return 'stop';
+		}
+	}
+// 实 例 化
+snowObject = new snow();
+snowObject.play(); //开始
+// snowObject.stop(); //停止
+</script>
